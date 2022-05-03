@@ -1,25 +1,38 @@
 import os
-import sqlite3
+import sqlite3 as mdb
 from sys import argv
 from os import getenv
 from sqlite3 import Error
 
 from rooms.room_model import Room
 from users.user_model import User
+from pathlib import Path
+import os
 
 
 class Database:
+    # path = os.path.abspath(os.getcwd())
+    # databasePath = (os.path.abspath("users.db"))
 
     def __init__(self):
-        self.conn = sqlite3.connect("users.db")
+        self.conn = mdb.connect("users.db")
         self.conn.execute("pragma foreign_keys")
         self.cur = self.conn.cursor()
         self.user = User
         self.room = Room
+        self.login = None
+        self.password = None
+        self.path = os.path.abspath(os.getcwd())
 
-    def get_database(self):
-        print("init")
-        print(sqlite3.version)
+    def chk_conn(self):
+        try:
+            self.cursor()
+            return True
+        except Exception as ex:
+            return False
+
+    myconn = mdb.connect("users.db")
+    print(chk_conn(myconn))
 
     def createTableUsers(self):
         self.cur.execute('''
@@ -42,33 +55,49 @@ class Database:
         )
         ''')
 
-    def insertIntoUsers(self):
-        self.cur.execute("INSERT OR IGNORE INTO users VALUES(\"login\", \"password\")")
-        self.conn.commit()
-        self.conn.close()
+    # def insertIntoUsers(self, **kwargs):
+    #     print("Liczba przekazanych parametrów:", len(kwargs))
+    #     for key, item in kwargs.items():
+    #         print("key:", key, "val:", item)
+    #         conn = mdb.connect("users.db")
+    #         cur = conn.cursor()
+    #         cur.execute(f'INSERT OR IGNORE INTO users(login, password) VALUES({key}, {item})')
+    #         conn.commit()
+    #         conn.close()
 
-    def insertIntoRooms(self, one_user=None):
-        self.cur.execute(
-            "INSERT INTO rooms (password, owner_id) VALUES (\"password\", {}) RETURNING *".format(one_user[0]))
-        created_room = self.cursor.fetchone()
+    def insertIntoUsers(self, login, password):
+        print("loginb:", login, "passwordb:", password)
+        conn = mdb.connect("users.db")
+        cur = conn.cursor()
+        cur.execute(f'INSERT OR IGNORE INTO users(login, password) VALUES({login}, {password})')
+        conn.commit()
+        conn.close()
 
-    def selectFromUsers(self):
-        self.cur.execute("SELECT * FROM users")
-        all_users = self.cursor.fetchall()
-        self.cur.execute("SELECT * FROM users WHERE login = \"A\"")
-        one_user = self.cursor.fetchone()
 
-    def remove_from_rooms(self, param, param1):
-        pass
 
-    def remove_from_users(self, param, param1):
-        pass
 
-    def find_all_users(self, param):
-        pass
+        def insertIntoRooms(self, one_user=None):
+            self.cur.execute(
+                "INSERT INTO rooms (password, owner_id) VALUES (\"password\", {}) RETURNING *".format(one_user[0]))
+            created_room = self.cursor.fetchone()
 
-    def find_all_rooms(self, param):
-        pass
+        def selectFromUsers(self):
+            self.cur.execute("SELECT * FROM users")
+            all_users = self.cursor.fetchall()
+            self.cur.execute("SELECT * FROM users WHERE login = \"A\"")
+            one_user = self.cursor.fetchone()
 
-    def close(self):
-        self.conn.close()
+        def remove_from_rooms(self, param, param1):
+            pass
+
+        def remove_from_users(self, param, param1):
+            pass
+
+        def find_all_users(self, param):
+            pass
+
+        def find_all_rooms(self, param):
+            pass
+
+        def close(self):
+            self.conn.close()
