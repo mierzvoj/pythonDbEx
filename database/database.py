@@ -55,26 +55,13 @@ class Database:
         )
         ''')
 
-    # def insertIntoUsers(self, **kwargs):
-    #     print("Liczba przekazanych parametrów:", len(kwargs))
-    #     for key, item in kwargs.items():
-    #         print("key:", key, "val:", item)
-    #         conn = mdb.connect("users.db")
-    #         cur = conn.cursor()
-    #         cur.execute(f'INSERT OR IGNORE INTO users(login, password) VALUES({key}, {item})')
-    #         conn.commit()
-    #         conn.close()
-
     def insertIntoUsers(self, login, password):
         print("loginb:", login, "passwordb:", password)
         conn = mdb.connect("users.db")
         cur = conn.cursor()
-        cur.execute(f'INSERT OR IGNORE INTO users(login, password) VALUES({login}, {password})')
+        cur.execute(f'INSERT OR IGNORE INTO users(login, password) VALUES(\"{login}\", \"{password}\")')
         conn.commit()
         conn.close()
-
-
-
 
         def insertIntoRooms(self, one_user=None):
             self.cur.execute(
