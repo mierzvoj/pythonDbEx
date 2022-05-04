@@ -30,9 +30,12 @@ class Database:
             return True
         except Exception as ex:
             return False
-
     myconn = mdb.connect("users.db")
-    print(chk_conn(myconn))
+    if(chk_conn(myconn)):
+        print("Database connected")
+    else:
+        print("Database connection failed")
+
 
     def createTableUsers(self):
         self.cur.execute('''
@@ -56,12 +59,21 @@ class Database:
         ''')
 
     def insertIntoUsers(self, login, password):
-        print("loginb:", login, "passwordb:", password)
         conn = mdb.connect("users.db")
         cur = conn.cursor()
         cur.execute(f'INSERT OR IGNORE INTO users(login, password) VALUES(\"{login}\", \"{password}\")')
         conn.commit()
         conn.close()
+
+    def find_in_db(self, login, password):
+        conn = mdb.connect("users.db")
+        cur = conn.cursor()
+        # cur.execute('SELECT * FROM users WHERE login = \"{login}\" AND password = \"{password}\"')
+        cur.execute('SELECT * FROM users')
+        check = cur.fetchall()
+        print(check)
+        items = [i for i in check if login in i]
+        return items[0] if items else None
 
         def insertIntoRooms(self, one_user=None):
             self.cur.execute(

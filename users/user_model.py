@@ -1,5 +1,4 @@
 class User:
-    def __init__(self, login, password):
+    def __init__(self, login):
         self.login = login
-        self.password = password
-        
+
