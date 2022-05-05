@@ -23,6 +23,7 @@ class Database:
         self.login = None
         self.password = None
         self.path = os.path.abspath(os.getcwd())
+        self.logintofind = None
 
     def chk_conn(self):
         try:
@@ -68,12 +69,36 @@ class Database:
     def find_in_db(self, login, password):
         conn = mdb.connect("users.db")
         cur = conn.cursor()
-        # cur.execute('SELECT * FROM users WHERE login = \"{login}\" AND password = \"{password}\"')
         cur.execute('SELECT * FROM users')
         check = cur.fetchall()
-        print(check)
+        # print(check)
         items = [i for i in check if login in i]
         return items[0] if items else None
+
+    def find_all_in_db(self):
+        print("list of  all Users: ")
+        conn = mdb.connect("users.db")
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM users')
+        check = cur.fetchall()
+        # print(check)
+        return check
+
+    def find_name_in_db(self, logintofind):
+        print("List of all Users with specified name: ")
+        conn = mdb.connect("users.db")
+        cur = conn.cursor()
+        sql = 'SELECT login FROM users where login=?;'
+        cur.execute(sql, (logintofind,))
+        check = cur.fetchall()
+        print(check)
+        return check[0] if check else None
+
+    def remove_from_db(self, logintodelete):
+        conn = mdb.connect("users.db")
+        cur = conn.cursor()
+        cur.execute('DELETE FROM users WHERE login=\"{logintodelete}\";')
+        print("User deleted")
 
         def insertIntoRooms(self, one_user=None):
             self.cur.execute(
