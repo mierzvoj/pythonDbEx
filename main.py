@@ -46,11 +46,11 @@ def list_all_users(db):
         print(user.login)
 
 
-def find_user_by_login(db, name):
-    name = input("Input name to find: ")
+def find_user_by_login(db, name: str):
+    name: str = input("Input name to find: ")
     print("Users with specified login: ")
-    output = user_service.get_user_by_name(db, login)
-    print(output[1])
+    output = user_service.get_user_by_name(db, name)
+    print(output[0])
 
 
 def remove_user(db, nametodelete):

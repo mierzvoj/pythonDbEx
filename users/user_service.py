@@ -33,7 +33,7 @@ def get_all_users(db: Database) -> List[User]:
 
 def get_user_by_name(db: Database, login) -> List[User]:
     user = db.find_name_in_db(login)
-    print(user[1])
+    print(user[0])
     return user
 
 
