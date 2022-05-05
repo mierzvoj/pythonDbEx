@@ -22,10 +22,10 @@ def run():
             list_all_users(db)
         if sys.argv[3] == "findone":
             find_user_by_login(db, None if len(sys.argv) < 5 else sys.argv[4])
-        if sys.argv[3] == "deleteuser: ":
+        if sys.argv[3] == "deleteuser":
             remove_user(db, None if len(sys.argv) < 5 else sys.argv[4])
         else:
-            print("wrong number")
+            print("____________")
     return
 
 
@@ -53,8 +53,8 @@ def find_user_by_login(db, name: str):
     print(output[0])
 
 
-def remove_user(db, nametodelete):
-    nametodelete = input("Input name to delete: ")
+def remove_user(db, nametodelete: str):
+    nametodelete: str = input("Input name to delete: ")
     return user_service.remove_user(db, nametodelete)
 
 

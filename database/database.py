@@ -97,7 +97,9 @@ class Database:
     def remove_from_db(self, logintodelete):
         conn = mdb.connect("users.db")
         cur = conn.cursor()
-        cur.execute('DELETE FROM users WHERE login=\"{logintodelete}\";')
+        sql = 'DELETE FROM users WHERE login=?;'
+        cur.execute(sql, (logintodelete,))
+        conn.commit()
         print("User deleted")
 
         def insertIntoRooms(self, one_user=None):
