@@ -1,15 +1,15 @@
 import sys
 import getpass
 
+import click
+
 import rooms
 from database.database import Database
 from rooms import room_service
 from users import user_service
 
 
-
-
-
+@click.group()
 def run():
     db = Database()
     db.createTableRooms()
@@ -66,6 +66,9 @@ def register_user():
     user_service.create_user(login, password)
 
 
+@run.group("user")
+@click.option("--login", required=True)
+@click.password_option()
 def login(db):
     login = input("Login:")
     password = getpass.getpass("Password:")
@@ -90,7 +93,8 @@ def remove_user(db, nametodelete: str):
 
 
 def create_room(db, user):
-    room_service.create_room(db, user.login, getpass.getpass('Room password: '))
+    room_id = input("Input room id: ")
+    room_service.create_room(db, room_id, user.login, getpass.getpass('Room password: '))
 
 
 if __name__ == '__main__':

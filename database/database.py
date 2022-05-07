@@ -102,7 +102,7 @@ class Database:
         conn.commit()
         print("User deleted")
 
-    def find_room_in_db(self, roomtofind):
+    def find_room_in_db(self, roomtofind:str):
         print("List of all Rooms with specified id: ")
         conn = mdb.connect("users.db")
         cur = conn.cursor()
@@ -110,7 +110,8 @@ class Database:
         cur.execute(sql, (roomtofind,))
         check = cur.fetchall()
         print(check)
-        return check[0] if check else None
+        print(check[0], check[1], check[2])
+        return (check[0], check[1], check[2]) if check else None
 
     def insertIntoRooms(self, room_id, owner_id, password):
         conn = mdb.connect("users.db")
