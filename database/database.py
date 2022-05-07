@@ -31,12 +31,12 @@ class Database:
             return True
         except Exception as ex:
             return False
+
     myconn = mdb.connect("users.db")
-    if(chk_conn(myconn)):
+    if (chk_conn(myconn)):
         print("Database connected")
     else:
         print("Database connection failed")
-
 
     def createTableUsers(self):
         self.cur.execute('''
@@ -55,7 +55,7 @@ class Database:
         CREATE TABLE IF NOT EXISTS rooms (
         room_id integer PRIMARY KEY,
         password text NOT NULL,
-        owner_id integer NOT NULL
+        owner_id text NOT NULL
         )
         ''')
 
@@ -102,16 +102,22 @@ class Database:
         conn.commit()
         print("User deleted")
 
-        def insertIntoRooms(self, one_user=None):
-            self.cur.execute(
-                "INSERT INTO rooms (password, owner_id) VALUES (\"password\", {}) RETURNING *".format(one_user[0]))
-            created_room = self.cursor.fetchone()
+    def find_room_in_db(self, roomtofind):
+        print("List of all Rooms with specified id: ")
+        conn = mdb.connect("users.db")
+        cur = conn.cursor()
+        sql = 'SELECT room_id FROM rooms where room_id=?;'
+        cur.execute(sql, (roomtofind,))
+        check = cur.fetchall()
+        print(check)
+        return check[0] if check else None
 
-        def selectFromUsers(self):
-            self.cur.execute("SELECT * FROM users")
-            all_users = self.cursor.fetchall()
-            self.cur.execute("SELECT * FROM users WHERE login = \"A\"")
-            one_user = self.cursor.fetchone()
+    def insertIntoRooms(self, room_id, owner_id, password):
+        conn = mdb.connect("users.db")
+        cur = conn.cursor()
+        cur.execute(f'INSERT OR IGNORE INTO rooms(room_id, owner_id, password) VALUES(\"{room_id}\",\"{owner_id}\",\"{password}\")')
+        conn.commit()
+        conn.close()
 
         def remove_from_rooms(self, param, param1):
             pass

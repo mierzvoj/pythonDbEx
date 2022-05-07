@@ -1,14 +1,37 @@
 import sys
 import getpass
 
+import rooms
 from database.database import Database
+from rooms import room_service
 from users import user_service
+
+
+
 
 
 def run():
     db = Database()
     db.createTableRooms()
     db.createTableUsers()
+
+    # if sys.argv[1] == "user":
+    #     if sys.argv[2] == "register":
+    #         register_user()
+    #     if sys.argv[2] == "login":
+    #         user = login(db)
+    #         if user is None:
+    #             print("Wrong credentials!")
+    #             return
+    #     if sys.argv[3] == "list":
+    #         list_all_users(db)
+    #     if sys.argv[3] == "findone":
+    #         find_user_by_login(db, None if len(sys.argv) < 5 else sys.argv[4])
+    #     if sys.argv[3] == "deleteuser":
+    #         remove_user(db, None if len(sys.argv) < 5 else sys.argv[4])
+    #     else:
+    #         print("____________")
+    # return
 
     if sys.argv[1] == "user":
         if sys.argv[2] == "register":
@@ -18,14 +41,22 @@ def run():
             if user is None:
                 print("Wrong credentials!")
                 return
-        if sys.argv[3] == "list":
+        if sys.argv[2] == "list":
             list_all_users(db)
-        if sys.argv[3] == "findone":
+        if sys.argv[2] == "findone":
             find_user_by_login(db, None if len(sys.argv) < 5 else sys.argv[4])
-        if sys.argv[3] == "deleteuser":
+        if sys.argv[2] == "deleteuser":
             remove_user(db, None if len(sys.argv) < 5 else sys.argv[4])
-        else:
-            print("____________")
+
+    if sys.argv[1] == "room":
+        user = login(db)
+        if user is None:
+            print("Wrong credentials!")
+            return
+        if sys.argv[2] == "create":
+            create_room(db, user)
+    # else:
+    #         print("_________")
     return
 
 
@@ -56,6 +87,10 @@ def find_user_by_login(db, name: str):
 def remove_user(db, nametodelete: str):
     nametodelete: str = input("Input name to delete: ")
     return user_service.remove_user(db, nametodelete)
+
+
+def create_room(db, user):
+    room_service.create_room(db, user.login, getpass.getpass('Room password: '))
 
 
 if __name__ == '__main__':
